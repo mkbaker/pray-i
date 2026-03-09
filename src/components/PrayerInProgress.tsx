@@ -50,6 +50,7 @@ export function PrayerInProgress({
 }: PrayerInProgressProps) {
   const [lines, setLines] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
+  const [finishing, setFinishing] = useState(false);
 
   useEffect(() => {
     // For UX, we cap actual on-screen duration to ~40s regardless of amount.
@@ -71,6 +72,7 @@ export function PrayerInProgress({
 
     let currentStep = 0;
     const newLines: string[] = [];
+    let timeoutId: number | undefined;
 
     const intervalId = window.setInterval(() => {
       currentStep += 1;
@@ -88,21 +90,28 @@ export function PrayerInProgress({
         window.clearInterval(intervalId);
         const summary = createSummary(text);
         onUpdate(newLines, summary);
-        onComplete();
+        setFinishing(true);
+        // Allow the sphere to expand to fill the viewport before moving on.
+        timeoutId = window.setTimeout(() => {
+          onComplete();
+        }, 1200);
       }
     }, intervalMs);
 
     return () => {
       window.clearInterval(intervalId);
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
     };
-    // We intentionally exclude onUpdate/onComplete from deps to avoid
-    // restarting the interval on every parent re-render.
+    // Intentionally exclude onUpdate/onComplete from deps to avoid restarting
+    // the interval whenever the parent re-renders.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.prayerText, session.metrics.humanMinutes]);
 
   return (
-    <section className="relative mt-10 flex min-h-[460px] flex-1 flex-col overflow-hidden rounded-3xl bg-[rgba(248,242,234,0.96)] shadow-[0_28px_70px_rgba(0,0,0,0.18)]">
-      <PrayerAnimation />
+    <section className="relative mt-10 flex min-h-[460px] flex-1 flex-col rounded-3xl bg-[rgba(248,242,234,0.96)] shadow-[0_28px_70px_rgba(0,0,0,0.18)]">
+      <PrayerAnimation progress={progress} finishing={finishing} />
 
       <div className="relative z-10 flex flex-1 flex-col justify-between px-8 py-8 sm:px-12 sm:py-10">
         <div className="space-y-3">

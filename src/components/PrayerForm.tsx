@@ -21,7 +21,7 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
     e.preventDefault();
     setTouched(true);
     if (!prayer.trim()) return;
-    if (amount < MIN_AMOUNT) return;
+    if (totalAmount < MIN_AMOUNT) return;
     onStartPrayer(prayer.trim(), totalAmount);
   };
 
@@ -37,8 +37,8 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
   };
 
   const amountError =
-    touched && amount < MIN_AMOUNT
-      ? `Minimum base offering is $${MIN_AMOUNT.toFixed(2)}`
+    touched && totalAmount < MIN_AMOUNT
+      ? `Minimum offering is $${MIN_AMOUNT.toFixed(2)}`
       : "";
 
   return (
@@ -70,20 +70,13 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
               <label className="text-xs font-medium uppercase tracking-[0.2em] text-[rgba(0,0,0,0.5)]">
                 Offering
               </label>
-              <div className="text-right text-sm text-[rgba(0,0,0,0.75)]">
-                <div>
-                  <span className="text-xs uppercase tracking-[0.18em] text-[rgba(0,0,0,0.45)]">
-                    EST. HUMAN MINUTES
-                  </span>
-                  <span className="ml-2 text-sm font-medium text-[rgba(0,0,0,0.8)]">
-                    ≈ {totalAmount || 0}
-                  </span>
-                </div>
-                {optimize && (
-                  <div className="mt-0.5 text-[10px] text-[rgba(0,0,0,0.6)]">
-                    Includes +1 minute for optimization.
-                  </div>
-                )}
+              <div className="text-sm text-[rgba(0,0,0,0.75)]">
+                <span className="text-xs uppercase tracking-[0.18em] text-[rgba(0,0,0,0.45)]">
+                  EST. HUMAN MINUTES
+                </span>
+                <span className="ml-2 text-sm font-medium text-[rgba(0,0,0,0.8)]">
+                  ≈ {totalAmount || 0}
+                </span>
               </div>
             </div>
 
@@ -100,56 +93,64 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
               <span className="text-xs text-[rgba(0,0,0,0.45)]">${MAX_AMOUNT}</span>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className="flex items-baseline rounded-full bg-[rgba(255,255,255,0.9)] px-3 py-1 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.07)]">
-                  <span className="text-xs text-[rgba(0,0,0,0.45)]">USD</span>
-                  <span className="ml-1 text-sm">$</span>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    pattern="[0-9.]*"
-                    className="w-20 border-none bg-transparent pl-1 text-sm text-[rgba(0,0,0,0.9)] outline-none"
-                    value={amount === 0 ? "" : amount.toString()}
-                    onChange={handleAmountInput}
-                  />
-                </div>
-                <p className="text-[10px] leading-snug text-[rgba(0,0,0,0.55)]">
-                  Your base offering approximates the literal compute cost: more
-                  dollars mean more repetitions of your request within a short
-                  machine window.
-                </p>
-              </div>
-
-              <label className="flex cursor-pointer items-start gap-2 rounded-2xl bg-white/70 px-3 py-2 text-[11px] leading-snug text-[rgba(0,0,0,0.75)] shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+            <div className="flex items-center gap-2">
+              <div className="flex items-baseline rounded-full bg-[rgba(255,255,255,0.9)] px-3 py-1 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.07)]">
+                <span className="text-xs text-[rgba(0,0,0,0.45)]">USD</span>
+                <span className="ml-1 text-sm">$</span>
                 <input
-                  type="checkbox"
-                  className="mt-[1px] h-3.5 w-3.5 rounded border border-[rgba(0,0,0,0.4)] accent-[rgba(0,0,0,0.9)]"
-                  checked={optimize}
-                  onChange={(e) => setOptimize(e.target.checked)}
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9.]*"
+                  className="w-20 border-none bg-transparent pl-1 text-sm text-[rgba(0,0,0,0.9)] outline-none"
+                  value={amount === 0 ? "" : amount.toString()}
+                  onChange={handleAmountInput}
                 />
-                <span>
-                  Optimize this prayer for an additional $1. The agent will devote a
-                  small extra burst of tuned attention to patterning and
-                  repetition.
-                </span>
-              </label>
+              </div>
+              <p className="text-[10px] leading-snug text-[rgba(0,0,0,0.55)]">
+                Your offering approximates the literal compute cost: more dollars
+                mean more repetitions of your request within a short machine
+                window.
+              </p>
             </div>
+
+            <label className="mt-2 flex cursor-pointer items-start gap-2 rounded-2xl bg-[rgba(255,255,255,0.8)] px-3 py-2 text-[11px] leading-snug text-[rgba(0,0,0,0.75)] shadow-[0_10px_26px_rgba(0,0,0,0.08)]">
+              <input
+                type="checkbox"
+                className="mt-[2px] h-3.5 w-3.5 rounded border border-[rgba(0,0,0,0.4)] accent-[rgba(0,0,0,0.9)]"
+                checked={optimize}
+                onChange={(e) => setOptimize(e.target.checked)}
+              />
+              <span>
+                Optimize this prayer for an additional <strong>$1</strong>. The agent
+                will devote a small extra burst of tuned attention to patterning
+                and repetition.
+              </span>
+            </label>
+
+            {optimize && (
+              <p className="mt-1 text-[10px] text-[rgba(0,0,0,0.6)]">
+                Includes +1 minute for machine optimization.
+              </p>
+            )}
+
             {amountError && (
-              <p className="text-[11px] text-[rgba(160,61,44,0.9)]">{amountError}</p>
+              <p className="mt-1 text-[11px] text-[rgba(160,61,44,0.9)]">
+                {amountError}
+              </p>
             )}
           </div>
 
-          <button
-            type="submit"
-            className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[rgba(0,0,0,0.92)] px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white shadow-[0_18px_40px_rgba(0,0,0,0.35)] transition hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/60"
-          >
-            Begin delegated prayer
-          </button>
-
-          <p className="mt-1 text-[10px] text-[rgba(0,0,0,0.6)]">
-            Total estimated charge: ${totalAmount.toFixed(2)}
-          </p>
+          <div className="space-y-2">
+            <button
+              type="submit"
+              className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[rgba(0,0,0,0.92)] px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white shadow-[0_18px_40px_rgba(0,0,0,0.35)] transition hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/60"
+            >
+              Begin delegated prayer
+            </button>
+            <p className="text-center text-[10px] text-[rgba(0,0,0,0.6)]">
+              Total estimated charge: ${totalAmount.toFixed(2)}
+            </p>
+          </div>
         </div>
       </form>
     </section>
