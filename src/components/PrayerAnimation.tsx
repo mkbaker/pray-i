@@ -121,22 +121,22 @@ export function PrayerAnimation({ progress, finishing }: PrayerAnimationProps) {
       {/* Flowing cloth back layer */}
       <div
         ref={clothBackRef}
-        className="absolute -inset-[10%] bg-[radial-gradient(circle_at_10%_0%,rgba(255,255,255,0.9),transparent_55%),radial-gradient(circle_at_90%_100%,rgba(244,220,190,0.75),transparent_58%),radial-gradient(circle_at_50%_100%,rgba(214,198,255,0.7),transparent_60%)] opacity-80 mix-blend-screen"
+        className="absolute -inset-[10%] bg-[radial-gradient(circle_at_10%_0%,var(--pray-color-white-90),transparent_55%),radial-gradient(circle_at_90%_100%,var(--pray-color-cloth-gold),transparent_58%),radial-gradient(circle_at_50%_100%,var(--pray-color-cloth-lavender),transparent_60%)] opacity-80 mix-blend-screen"
       />
 
       {/* Flowing cloth front layer */}
       <div
         ref={clothFrontRef}
-        className="absolute -inset-[20%] bg-[radial-gradient(circle_at_0%_50%,rgba(255,255,255,0.9),transparent_55%),radial-gradient(circle_at_100%_40%,rgba(246,232,210,0.78),transparent_60%)] opacity-75 mix-blend-screen"
+        className="absolute -inset-[20%] bg-[radial-gradient(circle_at_0%_50%,var(--pray-color-white-90),transparent_55%),radial-gradient(circle_at_100%_40%,var(--pray-color-cloth-cream),transparent_60%)] opacity-75 mix-blend-screen"
       />
 
       {/* Growing sphere of light */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div
           ref={sphereRef}
-          className="sphere-light h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,rgba(254,243,199,1)_30%,rgba(251,191,36,0.95)_55%,rgba(251,191,36,0.2)_75%,transparent_90%)] opacity-80 shadow-[0_0_160px_80px_rgba(255,255,255,0.95)]"
+          className="sphere-light h-48 w-48 rounded-full bg-[radial-gradient(circle,var(--pray-color-white-100)_0%,var(--pray-color-sphere-core)_30%,var(--pray-color-sphere-amber)_55%,var(--pray-color-sphere-amber-fade)_75%,transparent_90%)] opacity-80 shadow-[0_0_160px_80px_var(--pray-color-white-95)]"
         >
-          <div className="sphere-core h-full w-full rounded-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.95),rgba(255,255,255,0)_55%)] mix-blend-screen" />
+          <div className="sphere-core h-full w-full rounded-full bg-[radial-gradient(circle_at_70%_80%,var(--pray-color-white-95),var(--pray-color-white-00)_55%)] mix-blend-screen" />
         </div>
       </div>
     </div>

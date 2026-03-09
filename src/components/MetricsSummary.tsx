@@ -7,8 +7,8 @@ interface MetricsSummaryProps {
 
 export function MetricsSummary({ metrics }: MetricsSummaryProps) {
   return (
-    <div className="mt-6 rounded-2xl bg-[rgba(255,255,255,0.9)] p-4 text-xs leading-relaxed text-[rgba(0,0,0,0.8)] shadow-[0_18px_50px_rgba(0,0,0,0.16)]">
-      <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[rgba(0,0,0,0.6)]">
+    <div className="mt-6 rounded-2xl bg-[color:var(--pray-color-white-90)] p-4 text-xs leading-relaxed text-[color:var(--pray-color-ink-80)] shadow-[0_18px_50px_var(--pray-color-ink-16)]">
+      <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--pray-color-ink-60)]">
         ESTIMATED FOOTPRINT
       </p>
       <p>
@@ -30,7 +30,7 @@ export function MetricsSummary({ metrics }: MetricsSummaryProps) {
         of your own time—outsourcing the repetition of your request to an
         indifferent yet attentive circuit.
       </p>
-      <p className="mt-2 text-[10px] text-[rgba(0,0,0,0.6)]">
+      <p className="mt-2 text-[10px] text-[color:var(--pray-color-ink-60)]">
         All figures are rough estimates meant to gesture at the materiality of
         computation rather than precise accounting.
       </p>

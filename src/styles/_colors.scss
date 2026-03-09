@@ -1,0 +1,127 @@
+$page-bg: #fdfbf8;
+$page-fg: #171717;
+$heaven-bg: #f7f3ec;
+$body-gradient-end: #f1e1cf;
+$dark-page-bg: #0a0a0a;
+$dark-page-fg: #ededed;
+
+$warm-panel: rgba(248, 242, 234, 0.96);
+$warm-certificate: rgba(252, 249, 244, 0.96);
+
+$ink-94: rgba(0, 0, 0, 0.94);
+$ink-92: rgba(0, 0, 0, 0.92);
+$ink-90: rgba(0, 0, 0, 0.9);
+$ink-88: rgba(0, 0, 0, 0.88);
+$ink-86: rgba(0, 0, 0, 0.86);
+$ink-85: rgba(0, 0, 0, 0.85);
+$ink-82: rgba(0, 0, 0, 0.82);
+$ink-80: rgba(0, 0, 0, 0.8);
+$ink-75: rgba(0, 0, 0, 0.75);
+$ink-72: rgba(0, 0, 0, 0.72);
+$ink-70: rgba(0, 0, 0, 0.7);
+$ink-65: rgba(0, 0, 0, 0.65);
+$ink-60: rgba(0, 0, 0, 0.6);
+$ink-55: rgba(0, 0, 0, 0.55);
+$ink-50: rgba(0, 0, 0, 0.5);
+$ink-45: rgba(0, 0, 0, 0.45);
+$ink-40: rgba(0, 0, 0, 0.4);
+$ink-35: rgba(0, 0, 0, 0.35);
+$ink-30: rgba(0, 0, 0, 0.3);
+$ink-22: rgba(0, 0, 0, 0.22);
+$ink-20: rgba(0, 0, 0, 0.2);
+$ink-18: rgba(0, 0, 0, 0.18);
+$ink-16: rgba(0, 0, 0, 0.16);
+$ink-14: rgba(0, 0, 0, 0.14);
+$ink-12: rgba(0, 0, 0, 0.12);
+$ink-08: rgba(0, 0, 0, 0.08);
+$ink-07: rgba(0, 0, 0, 0.07);
+$ink-04: rgba(0, 0, 0, 0.04);
+
+$white-100: rgba(255, 255, 255, 1);
+$white-95: rgba(255, 255, 255, 0.95);
+$white-90: rgba(255, 255, 255, 0.9);
+$white-80: rgba(255, 255, 255, 0.8);
+$white-70: rgba(255, 255, 255, 0.7);
+$white-65: rgba(255, 255, 255, 0.65);
+$white-50: rgba(255, 255, 255, 0.5);
+$white-40: rgba(255, 255, 255, 0.4);
+$white-00: rgba(255, 255, 255, 0);
+
+$warning-rust: rgba(160, 61, 44, 0.9);
+
+$halo-warm: rgba(245, 228, 206, 0.6);
+$cloth-gold: rgba(244, 220, 190, 0.75);
+$cloth-lavender: rgba(214, 198, 255, 0.7);
+$cloth-cream: rgba(246, 232, 210, 0.78);
+$sphere-core: rgba(254, 243, 199, 1);
+$sphere-amber: rgba(251, 191, 36, 0.95);
+$sphere-amber-fade: rgba(251, 191, 36, 0.2);
+
+:root {
+  --pray-color-page-bg: #{$page-bg};
+  --pray-color-page-fg: #{$page-fg};
+  --pray-color-heaven-bg: #{$heaven-bg};
+  --pray-color-heaven-fg: #{$page-fg};
+  --pray-color-body-gradient-top: #{$white-100};
+  --pray-color-body-gradient-middle: #{$heaven-bg};
+  --pray-color-body-gradient-end: #{$body-gradient-end};
+
+  --pray-color-warm-panel: #{$warm-panel};
+  --pray-color-warm-certificate: #{$warm-certificate};
+
+  --pray-color-ink-94: #{$ink-94};
+  --pray-color-ink-92: #{$ink-92};
+  --pray-color-ink-90: #{$ink-90};
+  --pray-color-ink-88: #{$ink-88};
+  --pray-color-ink-86: #{$ink-86};
+  --pray-color-ink-85: #{$ink-85};
+  --pray-color-ink-82: #{$ink-82};
+  --pray-color-ink-80: #{$ink-80};
+  --pray-color-ink-75: #{$ink-75};
+  --pray-color-ink-72: #{$ink-72};
+  --pray-color-ink-70: #{$ink-70};
+  --pray-color-ink-65: #{$ink-65};
+  --pray-color-ink-60: #{$ink-60};
+  --pray-color-ink-55: #{$ink-55};
+  --pray-color-ink-50: #{$ink-50};
+  --pray-color-ink-45: #{$ink-45};
+  --pray-color-ink-40: #{$ink-40};
+  --pray-color-ink-35: #{$ink-35};
+  --pray-color-ink-30: #{$ink-30};
+  --pray-color-ink-22: #{$ink-22};
+  --pray-color-ink-20: #{$ink-20};
+  --pray-color-ink-18: #{$ink-18};
+  --pray-color-ink-16: #{$ink-16};
+  --pray-color-ink-14: #{$ink-14};
+  --pray-color-ink-12: #{$ink-12};
+  --pray-color-ink-08: #{$ink-08};
+  --pray-color-ink-07: #{$ink-07};
+  --pray-color-ink-04: #{$ink-04};
+
+  --pray-color-white-100: #{$white-100};
+  --pray-color-white-95: #{$white-95};
+  --pray-color-white-90: #{$white-90};
+  --pray-color-white-80: #{$white-80};
+  --pray-color-white-70: #{$white-70};
+  --pray-color-white-65: #{$white-65};
+  --pray-color-white-50: #{$white-50};
+  --pray-color-white-40: #{$white-40};
+  --pray-color-white-00: #{$white-00};
+
+  --pray-color-warning-rust: #{$warning-rust};
+
+  --pray-color-halo-warm: #{$halo-warm};
+  --pray-color-cloth-gold: #{$cloth-gold};
+  --pray-color-cloth-lavender: #{$cloth-lavender};
+  --pray-color-cloth-cream: #{$cloth-cream};
+  --pray-color-sphere-core: #{$sphere-core};
+  --pray-color-sphere-amber: #{$sphere-amber};
+  --pray-color-sphere-amber-fade: #{$sphere-amber-fade};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pray-color-page-bg: #{$dark-page-bg};
+    --pray-color-page-fg: #{$dark-page-fg};
+  }
+}

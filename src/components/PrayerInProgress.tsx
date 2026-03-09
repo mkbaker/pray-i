@@ -110,18 +110,18 @@ export function PrayerInProgress({
   }, [session.prayerText, session.metrics.humanMinutes]);
 
   return (
-    <section className="relative mt-10 flex min-h-[460px] flex-1 flex-col rounded-3xl bg-[rgba(248,242,234,0.96)] shadow-[0_28px_70px_rgba(0,0,0,0.18)]">
+    <section className="relative mt-10 flex min-h-[460px] flex-1 flex-col rounded-3xl bg-[color:var(--pray-color-warm-panel)] shadow-[0_28px_70px_var(--pray-color-ink-18)]">
       <PrayerAnimation progress={progress} finishing={finishing} />
 
       <div className="relative z-10 flex flex-1 flex-col justify-between px-8 py-8 sm:px-12 sm:py-10">
         <div className="space-y-3">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-[rgba(0,0,0,0.55)]">
+          <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--pray-color-ink-55)]">
             PRAYER IN PROGRESS
           </p>
-          <h2 className="max-w-xl text-2xl font-light leading-snug text-[rgba(0,0,0,0.92)] sm:text-3xl">
+          <h2 className="max-w-xl text-2xl font-light leading-snug text-[color:var(--pray-color-ink-92)] sm:text-3xl">
             The agent is holding your request on your behalf.
           </h2>
-          <p className="max-w-md text-xs leading-relaxed text-[rgba(0,0,0,0.7)]">
+          <p className="max-w-md text-xs leading-relaxed text-[color:var(--pray-color-ink-70)]">
             Within this compressed window, the system repeats your intention
             many times over, letting silicon do the devotional labour in your
             place.
@@ -130,28 +130,28 @@ export function PrayerInProgress({
 
         <div className="mt-6 flex flex-1 flex-col gap-6 sm:flex-row">
           <div className="sm:w-2/5">
-            <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-[rgba(0,0,0,0.12)]">
+            <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-[color:var(--pray-color-ink-12)]">
               <div
-                className="h-full rounded-full bg-[linear-gradient(90deg,rgba(0,0,0,0.85),rgba(0,0,0,0.65))] transition-[width] duration-300 ease-out"
+                className="h-full rounded-full bg-[linear-gradient(90deg,var(--pray-color-ink-85),var(--pray-color-ink-65))] transition-[width] duration-300 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[rgba(0,0,0,0.65)]">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--pray-color-ink-65)]">
               EST. REPETITIONS
             </p>
-            <p className="mt-1 text-sm text-[rgba(0,0,0,0.88)]">
+            <p className="mt-1 text-sm text-[color:var(--pray-color-ink-88)]">
               ≈ {Math.round(session.metrics.repetitions).toLocaleString()} silent
               recitations
             </p>
-            <p className="mt-2 text-[11px] leading-relaxed text-[rgba(0,0,0,0.7)]">
+            <p className="mt-2 text-[11px] leading-relaxed text-[color:var(--pray-color-ink-70)]">
               You remain still. The machine does the repeating.
             </p>
           </div>
 
           <div className="sm:w-3/5">
-            <div className="max-h-52 space-y-2 overflow-hidden rounded-2xl bg-white/65 p-4 text-[11px] leading-relaxed text-[rgba(0,0,0,0.82)] shadow-[0_16px_40px_rgba(0,0,0,0.16)]">
+            <div className="max-h-52 space-y-2 overflow-hidden rounded-2xl bg-[color:var(--pray-color-white-65)] p-4 text-[11px] leading-relaxed text-[color:var(--pray-color-ink-82)] shadow-[0_16px_40px_var(--pray-color-ink-16)]">
               {lines.length === 0 && (
-                <p className="italic text-[rgba(0,0,0,0.6)]">
+                <p className="italic text-[color:var(--pray-color-ink-60)]">
                   Settling into the first repetition…
                 </p>
               )}
@@ -162,7 +162,7 @@ export function PrayerInProgress({
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3 text-[10px] text-[rgba(0,0,0,0.6)]">
+        <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3 text-[10px] text-[color:var(--pray-color-ink-60)]">
           <span>
             Est. human-equivalent minutes: {session.metrics.humanMinutes.toFixed(1)}
           </span>
