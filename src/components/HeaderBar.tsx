@@ -6,7 +6,7 @@ export function HeaderBar() {
           PRAY-I
         </span>
         <span className="text-xs text-[color:var(--pray-color-ink-40)]">
-          delegated devotion experiment
+          delegated devotion
         </span>
       </div>
       <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--pray-color-ink-40)]">
