@@ -5,6 +5,8 @@ interface AnimatedTextProps {
   className?: string;
   staggerDelay?: number;
   entranceDuration?: number;
+  autoExitDelay?: number;
+  onExitComplete?: () => void;
 }
 
 export function AnimatedText({
@@ -12,19 +14,19 @@ export function AnimatedText({
   className = "",
   staggerDelay,
   entranceDuration,
+  autoExitDelay,
+  onExitComplete,
 }: AnimatedTextProps) {
-  const { containerRef, chars } = useAnimatedText(text, {
+  const { containerRef, renderText } = useAnimatedText(text, {
     staggerDelay,
     entranceDuration,
+    autoExitDelay,
+    onExitComplete,
   });
 
   return (
     <span ref={containerRef} className={`${className} inline-block`}>
-      {chars.map((char, idx) => (
-        <span key={idx} className="char inline-block">
-          {char}
-        </span>
-      ))}
+      {renderText()}
     </span>
   );
 }

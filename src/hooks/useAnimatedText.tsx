@@ -5,6 +5,8 @@ interface UseAnimatedTextOptions {
   staggerDelay?: number;
   entranceDuration?: number;
   exitDuration?: number;
+  autoExitDelay?: number; // Delay in ms before auto-exiting (0 = no auto-exit)
+  onExitComplete?: () => void; // Callback when exit animation completes
 }
 
 /**
@@ -19,14 +21,20 @@ export function useAnimatedText(
     staggerDelay = 0.03,
     entranceDuration = 0.4,
     exitDuration = 0.6,
+    autoExitDelay = 0,
+    onExitComplete,
   } = options;
 
   const containerRef = useRef<HTMLSpanElement>(null);
   const entranceTimeline = useRef<gsap.core.Timeline | null>(null);
   const exitTimeline = useRef<gsap.core.Timeline | null>(null);
+  const onExitCompleteRef = useRef(onExitComplete);
+  const hasScheduledExit = useRef(false);
 
-  // Split text into individual characters
-  const chars = text.split("").map((char) => (char === " " ? "\u00A0" : char));
+  // Update callback ref when it changes
+  useEffect(() => {
+    onExitCompleteRef.current = onExitComplete;
+  }, [onExitComplete]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -35,8 +43,8 @@ export function useAnimatedText(
     const timeoutId = requestAnimationFrame(() => {
       if (!containerRef.current) return;
 
-      const charElements = containerRef.current.querySelectorAll(".char");
-      if (charElements.length === 0) return;
+      const chars = containerRef.current.querySelectorAll(".char");
+      if (chars.length === 0) return;
 
       // Check reduced motion preference
       const prefersReducedMotion = window.matchMedia(
@@ -45,16 +53,16 @@ export function useAnimatedText(
 
       if (prefersReducedMotion) {
         // Set final state immediately without animation
-        gsap.set(charElements, { opacity: 1 });
+        gsap.set(chars, { opacity: 1 });
         return;
       }
 
       // Set initial state explicitly
-      gsap.set(charElements, { opacity: 0, y: 10 });
+      gsap.set(chars, { opacity: 0, y: 10 });
 
       // Create entrance animation timeline
       entranceTimeline.current = gsap.timeline();
-      entranceTimeline.current.to(charElements, {
+      entranceTimeline.current.to(chars, {
         opacity: 1,
         y: 0,
         duration: entranceDuration,
@@ -78,8 +86,8 @@ export function useAnimatedText(
         return;
       }
 
-      const charElements = containerRef.current.querySelectorAll(".char");
-      if (charElements.length === 0) {
+      const chars = containerRef.current.querySelectorAll(".char");
+      if (chars.length === 0) {
         resolve();
         return;
       }
@@ -90,7 +98,7 @@ export function useAnimatedText(
       ).matches;
 
       if (prefersReducedMotion) {
-        gsap.set(charElements, { opacity: 0 });
+        gsap.set(chars, { opacity: 0 });
         resolve();
         return;
       }
@@ -103,7 +111,7 @@ export function useAnimatedText(
         onComplete: resolve,
       });
 
-      exitTimeline.current.to(charElements, {
+      exitTimeline.current.to(chars, {
         opacity: 0,
         y: -30,
         duration: exitDuration,
@@ -113,9 +121,33 @@ export function useAnimatedText(
     });
   };
 
+  // Auto-exit after delay if specified (only runs once on mount)
+  useEffect(() => {
+    if (autoExitDelay <= 0 || hasScheduledExit.current) return;
+
+    hasScheduledExit.current = true;
+    const exitTimer = setTimeout(() => {
+      triggerExit().then(() => {
+        onExitCompleteRef.current?.();
+      });
+    }, autoExitDelay);
+
+    return () => clearTimeout(exitTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
+
+  // Split text into individual character spans
+  const renderText = () => {
+    return text.split("").map((char, idx) => (
+      <span key={idx} className="char inline-block">
+        {char === " " ? "\u00A0" : char}
+      </span>
+    ));
+  };
+
   return {
     containerRef,
-    chars,
+    renderText,
     triggerExit,
   };
 }
