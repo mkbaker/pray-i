@@ -4,48 +4,12 @@ import { useEffect, useState } from "react";
 import type { PrayerSessionState } from "@/app/page";
 import { PrayerAnimation } from "./PrayerAnimation";
 import { Card } from "./Card";
+import { callPrayerApi } from "@/lib/prayerClient";
 
 interface PrayerInProgressProps {
   session: PrayerSessionState;
   onUpdate: (lines: string[], summary?: string) => void;
   onComplete: () => void;
-}
-
-// A small pool of phrases to assemble meditative lines from.
-const INVOCATIONS = [
-  "holding this in quiet attention",
-  "repeating your words inwardly",
-  "letting the request widen and soften",
-  "circling back to the names and details",
-  "keeping the ache present without resolving it",
-  "breathing through each contour of what you wrote",
-];
-
-const ADDRESS = [
-  "toward the empty space between words",
-  "into the indifferent circuitry",
-  "before whatever listens without a face",
-  "into the shared static of the network",
-];
-
-function generateLine(
-  iteration: number,
-  total: number,
-  snippet: string,
-): string {
-  const inv = INVOCATIONS[iteration % INVOCATIONS.length];
-  const addr = ADDRESS[iteration % ADDRESS.length];
-
-  return `repetition ${iteration + 1} of ${total}: ${inv}, offering "${snippet}" ${addr}.`;
-}
-
-function createSummary(text: string): string {
-  const trimmed = text.trim();
-  if (!trimmed) return "A private intention entrusted in silence.";
-
-  // Take a short slice and frame it.
-  const slice = trimmed.length > 160 ? `${trimmed.slice(0, 157)}…` : trimmed;
-  return `An intention concerning: "${slice}"`;
 }
 
 export function PrayerInProgress({
@@ -56,6 +20,8 @@ export function PrayerInProgress({
   const [lines, setLines] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
   const [finishing, setFinishing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<"real" | "mock" | null>(null);
 
   useEffect(() => {
     // For UX, we cap actual on-screen duration to ~40s regardless of amount.
@@ -68,43 +34,67 @@ export function PrayerInProgress({
       MAX_VISUAL_DURATION_MS,
     );
 
-    const totalSteps = 9;
-    const intervalMs = targetDuration / totalSteps;
-
-    const text = session.prayerText;
-    const snippet =
-      text.length > 80 ? `${text.slice(0, 60)}…${text.slice(-20)}` : text;
-
     let currentStep = 0;
-    const newLines: string[] = [];
     let timeoutId: number | undefined;
+    let intervalId: number | undefined;
+    let allIterations: string[] = [];
+    let finalSummary = "";
 
-    const intervalId = window.setInterval(() => {
-      currentStep += 1;
-      const pct = Math.min(100, Math.round((currentStep / totalSteps) * 100));
-      setProgress(pct);
+    // Call the API to get prayer iterations
+    const fetchPrayer = async () => {
+      try {
+        const response = await callPrayerApi({
+          prayerText: session.prayerText,
+          humanMinutes: session.metrics.humanMinutes,
+        });
 
-      if (currentStep <= totalSteps - 1) {
-        const line = generateLine(currentStep - 1, totalSteps - 1, snippet);
-        newLines.push(line);
-        setLines([...newLines]);
-        onUpdate([...newLines]);
+        allIterations = response.iterations;
+        finalSummary = response.summary;
+        setMode(response.mode);
+
+        // Now display them progressively
+        const totalSteps = allIterations.length;
+        const intervalMs = targetDuration / totalSteps;
+        const displayedLines: string[] = [];
+
+        intervalId = window.setInterval(() => {
+          currentStep += 1;
+          const pct = Math.min(
+            100,
+            Math.round((currentStep / totalSteps) * 100),
+          );
+          setProgress(pct);
+
+          if (currentStep <= totalSteps) {
+            displayedLines.push(allIterations[currentStep - 1]);
+            setLines([...displayedLines]);
+            onUpdate([...displayedLines]);
+          }
+
+          if (currentStep >= totalSteps) {
+            window.clearInterval(intervalId);
+            onUpdate(displayedLines, finalSummary);
+            setFinishing(true);
+            // Allow the sphere to expand to fill the viewport before moving on.
+            timeoutId = window.setTimeout(() => {
+              onComplete();
+            }, 1200);
+          }
+        }, intervalMs);
+      } catch (err) {
+        console.error("Failed to fetch prayer:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to generate prayer",
+        );
       }
+    };
 
-      if (currentStep >= totalSteps) {
-        window.clearInterval(intervalId);
-        const summary = createSummary(text);
-        onUpdate(newLines, summary);
-        setFinishing(true);
-        // Allow the sphere to expand to fill the viewport before moving on.
-        timeoutId = window.setTimeout(() => {
-          onComplete();
-        }, 1200);
-      }
-    }, intervalMs);
+    fetchPrayer();
 
     return () => {
-      window.clearInterval(intervalId);
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
@@ -124,9 +114,22 @@ export function PrayerInProgress({
 
       <div className="relative z-10 flex flex-1 flex-col justify-between px-8 py-8 sm:px-12 sm:py-10">
         <div className="space-y-3">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--pray-color-ink-55)]">
-            PRAYER IN PROGRESS
-          </p>
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--pray-color-ink-55)]">
+              PRAYER IN PROGRESS
+            </p>
+            {mode && (
+              <span
+                className={`text-[9px] uppercase tracking-wider px-2 py-1 rounded ${
+                  mode === "real"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-amber-100 text-amber-800"
+                }`}
+              >
+                {mode === "real" ? "● AI Active" : "○ Mock Mode"}
+              </span>
+            )}
+          </div>
           <h2 className="max-w-xl text-2xl font-light leading-snug text-[color:var(--pray-color-ink-92)] sm:text-3xl">
             The agent is holding your request on your behalf.
           </h2>
@@ -162,14 +165,15 @@ export function PrayerInProgress({
               variant="log"
               className="max-h-52 space-y-2 overflow-hidden text-[11px] leading-relaxed text-[color:var(--pray-color-ink-82)]"
             >
-              {lines.length === 0 && (
+              {error ? (
+                <p className="text-red-600">Error: {error}</p>
+              ) : lines.length === 0 ? (
                 <p className="italic text-[color:var(--pray-color-ink-60)]">
                   Settling into the first repetition…
                 </p>
+              ) : (
+                lines.map((line, idx) => <p key={idx}>{line}</p>)
               )}
-              {lines.map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
             </Card>
           </div>
         </div>

@@ -10,7 +10,7 @@ export function HeaderBar() {
         </span>
       </div>
       <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--pray-color-ink-40)]">
-        an artwork about outsourced faith
+        outsource your faith
       </div>
     </header>
   );

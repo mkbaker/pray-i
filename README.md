@@ -2,6 +2,32 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Environment Setup
+
+1. Copy the `.env.local.example` file to `.env.local`:
+
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+2. (Optional) Add your OpenAI API key to `.env.local`:
+   ```
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+   Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
+
+### Dev Mode vs. Production Mode
+
+This app has two modes for AI integration:
+
+- **Development Mode** (default): Uses mock AI responses. This allows you to develop without API costs.
+  - To enable real AI calls for testing in dev mode, set `NEXT_PUBLIC_DEV_MODE_USE_REAL_AI=true` in `.env.local`
+  - A dev mode indicator appears in the bottom-right corner showing the current mode
+
+- **Production Mode**: Always uses real OpenAI API calls. Requires `OPENAI_API_KEY` to be set.
+
+### Running the Development Server
+
 First, run the development server:
 
 ```bash
