@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { PrayerSessionState } from "@/app/page";
 import { PrayerAnimation } from "./PrayerAnimation";
+import { Card } from "./Card";
 
 interface PrayerInProgressProps {
   session: PrayerSessionState;
@@ -27,7 +28,11 @@ const ADDRESS = [
   "into the shared static of the network",
 ];
 
-function generateLine(iteration: number, total: number, snippet: string): string {
+function generateLine(
+  iteration: number,
+  total: number,
+  snippet: string,
+): string {
   const inv = INVOCATIONS[iteration % INVOCATIONS.length];
   const addr = ADDRESS[iteration % ADDRESS.length];
 
@@ -110,7 +115,11 @@ export function PrayerInProgress({
   }, [session.prayerText, session.metrics.humanMinutes]);
 
   return (
-    <section className="relative mt-10 flex min-h-[460px] flex-1 flex-col rounded-3xl bg-[color:var(--pray-color-warm-panel)] shadow-[0_28px_70px_var(--pray-color-ink-18)]">
+    <Card
+      variant="panel"
+      as="section"
+      className="relative mt-10 flex min-h-[460px] flex-1 flex-col"
+    >
       <PrayerAnimation progress={progress} finishing={finishing} />
 
       <div className="relative z-10 flex flex-1 flex-col justify-between px-8 py-8 sm:px-12 sm:py-10">
@@ -140,8 +149,8 @@ export function PrayerInProgress({
               EST. REPETITIONS
             </p>
             <p className="mt-1 text-sm text-[color:var(--pray-color-ink-88)]">
-              ≈ {Math.round(session.metrics.repetitions).toLocaleString()} silent
-              recitations
+              ≈ {Math.round(session.metrics.repetitions).toLocaleString()}{" "}
+              silent recitations
             </p>
             <p className="mt-2 text-[11px] leading-relaxed text-[color:var(--pray-color-ink-70)]">
               You remain still. The machine does the repeating.
@@ -149,7 +158,10 @@ export function PrayerInProgress({
           </div>
 
           <div className="sm:w-3/5">
-            <div className="max-h-52 space-y-2 overflow-hidden rounded-2xl bg-[color:var(--pray-color-white-65)] p-4 text-[11px] leading-relaxed text-[color:var(--pray-color-ink-82)] shadow-[0_16px_40px_var(--pray-color-ink-16)]">
+            <Card
+              variant="log"
+              className="max-h-52 space-y-2 overflow-hidden text-[11px] leading-relaxed text-[color:var(--pray-color-ink-82)]"
+            >
               {lines.length === 0 && (
                 <p className="italic text-[color:var(--pray-color-ink-60)]">
                   Settling into the first repetition…
@@ -158,19 +170,21 @@ export function PrayerInProgress({
               {lines.map((line, idx) => (
                 <p key={idx}>{line}</p>
               ))}
-            </div>
+            </Card>
           </div>
         </div>
 
         <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3 text-[10px] text-[color:var(--pray-color-ink-60)]">
           <span>
-            Est. human-equivalent minutes: {session.metrics.humanMinutes.toFixed(1)}
+            Est. human-equivalent minutes:{" "}
+            {session.metrics.humanMinutes.toFixed(1)}
           </span>
           <span>
-            Est. tokens processed: {Math.round(session.metrics.tokens).toLocaleString()}
+            Est. tokens processed:{" "}
+            {Math.round(session.metrics.tokens).toLocaleString()}
           </span>
         </div>
       </div>
-    </section>
+    </Card>
   );
 }

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { PrayerSessionState } from "@/app/page";
 import { MetricsSummary } from "./MetricsSummary";
+import { Card } from "./Card";
 
 interface CertificateOfPrayerProps {
   session: PrayerSessionState;
@@ -25,7 +26,7 @@ export function CertificateOfPrayer({
 
   return (
     <section className="mt-10 flex flex-1 flex-col items-center justify-center">
-      <div className="w-full max-w-3xl rounded-[32px] bg-[color:var(--pray-color-warm-certificate)] px-6 py-8 text-center shadow-[0_30px_80px_var(--pray-color-ink-22)] sm:px-10 sm:py-10">
+      <Card variant="certificate" className="w-full max-w-3xl text-center">
         <div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[color:var(--pray-color-ink-55)]">
           CERTIFICATE OF PRAYER
         </div>
@@ -42,7 +43,8 @@ export function CertificateOfPrayer({
             PARAPHRASED INTENTION
           </p>
           <p className="mt-2">
-            {session.summary || "An intention entrusted without further description."}
+            {session.summary ||
+              "An intention entrusted without further description."}
           </p>
 
           <p className="mt-4 text-[11px] leading-relaxed text-[color:var(--pray-color-ink-72)]">
@@ -75,7 +77,7 @@ export function CertificateOfPrayer({
           No copy of your words is kept beyond this page. Closing this window
           releases the system from remembering them.
         </p>
-      </div>
+      </Card>
     </section>
   );
 }

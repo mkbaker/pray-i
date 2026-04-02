@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Card } from "./Card";
 
 interface PrayerFormProps {
   onStartPrayer: (prayerText: string, amountDollars: number) => void;
@@ -43,9 +44,11 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
 
   return (
     <section className="mt-8">
-      <form
+      <Card
+        variant="form"
+        as="form"
+        className="grid gap-10 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)]"
         onSubmit={handleSubmit}
-        className="grid gap-10 rounded-3xl bg-[color:var(--pray-color-white-50)] p-6 shadow-[0_24px_60px_var(--pray-color-ink-08)] backdrop-blur-sm sm:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)] sm:p-10"
       >
         <div className="space-y-4">
           <label className="block text-xs font-medium uppercase tracking-[0.2em] text-[color:var(--pray-color-ink-50)]">
@@ -81,7 +84,9 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-xs text-[color:var(--pray-color-ink-45)]">${MIN_AMOUNT}</span>
+              <span className="text-xs text-[color:var(--pray-color-ink-45)]">
+                ${MIN_AMOUNT}
+              </span>
               <input
                 type="range"
                 min={MIN_AMOUNT}
@@ -90,12 +95,16 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
                 onChange={handleSliderChange}
                 className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-[color:var(--pray-color-ink-08)] accent-[var(--pray-color-ink-85)] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--pray-color-ink-85)] [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_var(--pray-color-white-100)]"
               />
-              <span className="text-xs text-[color:var(--pray-color-ink-45)]">${MAX_AMOUNT}</span>
+              <span className="text-xs text-[color:var(--pray-color-ink-45)]">
+                ${MAX_AMOUNT}
+              </span>
             </div>
 
             <div className="flex items-center gap-2">
               <div className="flex items-baseline rounded-full bg-[color:var(--pray-color-white-90)] px-3 py-1 text-sm shadow-[0_10px_30px_var(--pray-color-ink-07)]">
-                <span className="text-xs text-[color:var(--pray-color-ink-45)]">USD</span>
+                <span className="text-xs text-[color:var(--pray-color-ink-45)]">
+                  USD
+                </span>
                 <span className="ml-1 text-sm">$</span>
                 <input
                   type="text"
@@ -107,9 +116,9 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
                 />
               </div>
               <p className="text-[10px] leading-snug text-[color:var(--pray-color-ink-55)]">
-                Your offering approximates the literal compute cost: more dollars
-                mean more repetitions of your request within a short machine
-                window.
+                Your offering approximates the literal compute cost: more
+                dollars mean more repetitions of your request within a short
+                machine window.
               </p>
             </div>
 
@@ -121,9 +130,9 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
                 onChange={(e) => setOptimize(e.target.checked)}
               />
               <span>
-                Optimize this prayer for an additional <strong>$1</strong>. The agent
-                will devote a small extra burst of tuned attention to patterning
-                and repetition.
+                Optimize this prayer for an additional <strong>$1</strong>. The
+                agent will devote a small extra burst of tuned attention to
+                patterning and repetition.
               </span>
             </label>
 
@@ -152,7 +161,7 @@ export function PrayerForm({ onStartPrayer }: PrayerFormProps) {
             </p>
           </div>
         </div>
-      </form>
+      </Card>
     </section>
   );
 }
