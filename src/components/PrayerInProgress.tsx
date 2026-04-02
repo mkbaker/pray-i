@@ -50,6 +50,7 @@ export function PrayerInProgress({
     let intervalId: number | undefined;
     let allIterations: string[] = [];
     let finalSummary = "";
+    const abortController = new AbortController();
 
     // Call the API to get prayer iterations
     const fetchPrayer = async () => {
@@ -57,6 +58,7 @@ export function PrayerInProgress({
         const response = await callPrayerApi({
           prayerText: session.prayerText,
           humanMinutes: session.metrics.humanMinutes,
+          signal: abortController.signal,
         });
 
         allIterations = response.iterations;
@@ -106,6 +108,7 @@ export function PrayerInProgress({
           }
         }, intervalMs);
       } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") return;
         console.error("Failed to fetch prayer:", err);
         setError(
           err instanceof Error ? err.message : "Failed to generate prayer",
@@ -116,6 +119,7 @@ export function PrayerInProgress({
     fetchPrayer();
 
     return () => {
+      abortController.abort();
       if (intervalId) {
         window.clearInterval(intervalId);
       }

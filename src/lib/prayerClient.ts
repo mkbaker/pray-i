@@ -7,6 +7,7 @@ import type { PrayerResponse } from "./prayerService";
 export interface PrayerApiRequest {
   prayerText: string;
   humanMinutes: number;
+  signal?: AbortSignal;
 }
 
 /**
@@ -15,12 +16,14 @@ export interface PrayerApiRequest {
 export async function callPrayerApi(
   request: PrayerApiRequest,
 ): Promise<PrayerResponse> {
+  const { signal, ...body } = request;
   const response = await fetch("/api/prayer", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(request),
+    body: JSON.stringify(body),
+    signal,
   });
 
   if (!response.ok) {
