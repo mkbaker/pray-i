@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { PrayerSessionState } from "@/app/page";
 import { PrayerAnimation } from "./PrayerAnimation";
 import { Card } from "./Card";
+import { AnimatedText } from "./AnimatedText";
 import { callPrayerApi } from "@/lib/prayerClient";
 
 interface PrayerInProgressProps {
@@ -169,10 +170,17 @@ export function PrayerInProgress({
                 <p className="text-red-600">Error: {error}</p>
               ) : lines.length === 0 ? (
                 <p className="italic text-[color:var(--pray-color-ink-60)]">
-                  Settling into the first repetition…
+                  <AnimatedText
+                    text="Settling into the first repetition…"
+                    staggerDelay={0.035}
+                  />
                 </p>
               ) : (
-                lines.map((line, idx) => <p key={idx}>{line}</p>)
+                lines.map((line, idx) => (
+                  <p key={idx}>
+                    <AnimatedText text={line} staggerDelay={0.02} />
+                  </p>
+                ))
               )}
             </Card>
           </div>
