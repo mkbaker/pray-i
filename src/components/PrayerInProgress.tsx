@@ -7,6 +7,56 @@ import { Card } from "./Card";
 import { FloatingPrayerThought } from "./FloatingPrayerThought";
 import { callPrayerApi } from "@/lib/prayerClient";
 
+// Estimated thought size (px). Used for overlap avoidance on placement.
+const EST_W = 340;
+const EST_H = 90;
+
+/**
+ * Pick the center-coordinate position (relative to viewport center) that
+ * maximises clearance from existing thought centers. Tries 16 candidates
+ * and returns the one with the greatest minimum distance to any existing thought.
+ */
+function findPosition(existing: { x: number; y: number }[]): {
+  x: number;
+  y: number;
+} {
+  let bestX = 0;
+  let bestY = 0;
+  let bestScore = -Infinity;
+
+  for (let i = 0; i < 16; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 80 + Math.random() * 160;
+    const cx = Math.cos(angle) * distance;
+    const cy = Math.sin(angle) * distance;
+
+    let hasOverlap = false;
+    let minDist = Infinity;
+
+    for (const pos of existing) {
+      const dx = Math.abs(cx - pos.x);
+      const dy = Math.abs(cy - pos.y);
+      if (dx < EST_W && dy < EST_H) {
+        hasOverlap = true;
+        minDist = 0;
+        break;
+      }
+      const d = Math.sqrt((cx - pos.x) ** 2 + (cy - pos.y) ** 2);
+      minDist = Math.min(minDist, d);
+    }
+
+    // Strongly prefer non-overlapping placements, then maximise clearance.
+    const score = hasOverlap ? -10000 + minDist : minDist;
+    if (score > bestScore) {
+      bestScore = score;
+      bestX = cx;
+      bestY = cy;
+    }
+  }
+
+  return { x: bestX, y: bestY };
+}
+
 interface PrayerInProgressProps {
   session: PrayerSessionState;
   onUpdate: (lines: string[], summary?: string) => void;
@@ -20,7 +70,7 @@ export function PrayerInProgress({
 }: PrayerInProgressProps) {
   const [lines, setLines] = useState<Array<{ id: number; text: string }>>([]);
   const [visibleThoughts, setVisibleThoughts] = useState<
-    Array<{ id: number; text: string }>
+    Array<{ id: number; text: string; x: number; y: number }>
   >([]);
   const [progress, setProgress] = useState(0);
   const [finishing, setFinishing] = useState(false);
@@ -87,9 +137,10 @@ export function PrayerInProgress({
             setLines([...displayedLines]);
             onUpdate(displayedLines.map((l) => l.text));
 
-            // Add to visible thoughts (maintain max visible limit)
+            // Add to visible thoughts, placing it to avoid overlapping existing ones
             setVisibleThoughts((prev) => {
-              const updated = [...prev, newLine];
+              const pos = findPosition(prev.map((t) => ({ x: t.x, y: t.y })));
+              const updated = [...prev, { ...newLine, ...pos }];
               return updated.slice(-MAX_VISIBLE_THOUGHTS);
             });
           }
@@ -140,6 +191,8 @@ export function PrayerInProgress({
           <FloatingPrayerThought
             key={thought.id}
             text={thought.text}
+            initialX={thought.x}
+            initialY={thought.y}
             onComplete={() => handleThoughtComplete(thought.id)}
           />
         ))}
